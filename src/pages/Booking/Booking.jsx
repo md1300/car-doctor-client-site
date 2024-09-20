@@ -2,18 +2,20 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import BookingRow from "./BookingRow";
 import axios from "axios";
+import useAxiosSecure from "../../hook/useAxiosSecure";
 
 const Booking = () => {
     const {user}=useContext(AuthContext)
     const [bookings,setBookings]=useState([])
-    console.log(user.email)
+    const axiosSecure=useAxiosSecure()
+    // console.log(user.email)
 
     // --------------------handle delete button -------------------
 
     const handledeleteButton=id=>{
         const proceeds=confirm('are you sure to delete data')
         if(proceeds){
-            fetch(`http://localhost:5000/bookings/${id}`,{
+            fetch(`https://cars-doctors-server-site.vercel.app/bookings/${id}`,{
                 method:'DELETE'
             })
             .then(res=>res.json())
@@ -32,7 +34,7 @@ const Booking = () => {
     // ----------update button ---------------------
     const handleConfirmButton=id=>{
 
-        fetch(`http://localhost:5000/bookings/${id}`,{
+        fetch(`https://cars-doctors-server-site.vercel.app/bookings/${id}`,{
             method:'PATCH',
             headers:{
                 "Content-Type": "application/json",
@@ -55,18 +57,17 @@ const Booking = () => {
 
     }
 //  -------------------called api ------------------
-    const url=`http://localhost:5000/bookings?email=${user.email}`;
-    console.log(url)
+    const url=`/bookings?email=${user.email}`;
+    // const url=`https://cars-doctors-server-site.vercel.app/bookings?email=${user.email}`;
+    // console.log(url)
 
     useEffect(()=>{
-        axios.get(url, {withCredentials:true})
-        .then(res=>{
-            setBookings(res.data)
-        })
-        // fetch(url)
+        // fetch(url,{credentials:'include'})
         // .then(res=>res.json())
         // .then(data=>setBookings(data))
-    },[])
+        axiosSecure.get(url)
+        .then(res=>setBookings(res.data))
+    },[url,axiosSecure])
     return (
         <div>
             <h1 className="text-4xl text-center text-orange-400">booking page :{bookings.length} </h1>
