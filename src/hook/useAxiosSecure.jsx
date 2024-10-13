@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import useAuth from "./useAuth";
 import { Navigate } from "react-router-dom";
 
-const axiosSecure=axios.create({
-    baseURL:'https://cars-doctors-server-site.vercel.app',
+export const axiosSecure=axios.create({
+    baseURL:'http://localhost:5000',
     withCredentials:true
 })
 const useAxiosSecure = () => {
